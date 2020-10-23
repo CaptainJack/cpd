@@ -1,0 +1,11 @@
+/.gradle
+
+/.idea/*
+!/.idea/runConfigurations
+!/.idea/dictionaries
+!/.idea/codeStyles
+!/.idea/inspectionProfiles
+
+build
+
+

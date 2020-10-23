@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"target": "ES5",
+		"strict": true,
+		"removeComments": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"declaration": true,
+		"outFile": "build/distribution/index.js",
+		"rootDir": "src"
+	},
+	"include": ["src", "node_modules", "types"]
+}
