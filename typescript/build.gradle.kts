@@ -37,12 +37,9 @@ tasks.getByName("assemble") {
 
 task<com.moowork.gradle.node.npm.NpmTask>("publish") {
 	dependsOn("build")
-	setArgs(listOf("publish"))
+	setArgs(listOf("publish", "--access", "public"))
 	setWorkingDir(distributionDir)
 }
-
-parent!!.tasks.getByName("release").dependsOn("publish")
-
 
 task<com.moowork.gradle.node.npm.NpmTask>("unpublish") {
 	doFirst {
@@ -56,6 +53,9 @@ task<com.moowork.gradle.node.npm.NpmTask>("unpublish") {
 		}
 	}
 }
+
+parent!!.tasks["release"].dependsOn(tasks["publish"])
+
 
 fun Project.loadPackageJson(): MutableMap<String, Any> {
 	@Suppress("UNCHECKED_CAST")
