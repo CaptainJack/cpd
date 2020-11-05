@@ -19,7 +19,7 @@ module capjack.tool.cpd {
 		public mmPrivateKey: string = "";
 	}
 	
-	export function init(config?: Config): Promise<CpdState> {
+	export function init(project: string, config?: Config): Promise<CpdState> {
 		const c = config || new Config();
 		
 		return new Promise((resolve, reject) => {
@@ -36,7 +36,7 @@ module capjack.tool.cpd {
 				identity.profileSite = defineBrowserProfileSite(location.host, query);
 				
 				if (identity.profileSite == ProfileSite.NO) {
-					identity.profileId = getGeneratedProfileId(sys);
+					identity.profileId = getGeneratedProfileId(project, sys);
 					resolve(identity.toState())
 				}
 				else {
@@ -53,7 +53,7 @@ module capjack.tool.cpd {
 			}
 			else {
 				identity.profileSite = ProfileSite.NO;
-				identity.profileId = getGeneratedProfileId(sys);
+				identity.profileId = getGeneratedProfileId(project, sys);
 				
 				resolve(identity.toState())
 			}
@@ -169,8 +169,8 @@ module capjack.tool.cpd {
 		})
 	}
 	
-	function getGeneratedProfileId(sys: typeof cc.sys) {
-		const k = "cjt-cpd-profileId";
+	function getGeneratedProfileId(project: string, sys: typeof cc.sys) {
+		const k = `cjt-cpd-${project}-profileId`;
 		let profileId = sys.localStorage[k];
 		if (profileId == undefined) {
 			const s = [];
