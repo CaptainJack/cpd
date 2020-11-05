@@ -37,6 +37,7 @@ module capjack.tool.cpd {
 				
 				if (identity.profileSite == ProfileSite.NO) {
 					identity.profileId = getGeneratedProfileId(sys);
+					resolve(identity.toState())
 				}
 				else {
 					includeScript(getProfileSiteScriptUrl(identity.profileSite))
