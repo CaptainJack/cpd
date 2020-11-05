@@ -2,7 +2,7 @@
 	"name": "@capjack/tool-cpd",
 	"scripts": {
 		"tsc": "tsc",
-		"compress": "uglifyjs build/distribution/index.js -c -m -o build/distribution/index.min.js",
+		"compress": "uglifyjs build/distribution/capjack-tool-cpd.js -c -m -o build/distribution/capjack-tool-cpd.min.js",
 		"compile": "npm run tsc && npm run compress"
 	},
 	"devDependencies": {

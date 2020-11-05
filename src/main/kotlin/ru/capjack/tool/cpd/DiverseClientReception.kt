@@ -1,6 +1,6 @@
 package ru.capjack.tool.cpd
 
-class DiverseClientReception() : ClientReception {
+open class DiverseClientReception() : ClientReception {
 	
 	private val profileIdentifiers = mutableMapOf<ClientProfileSite, ClientProfileIdentifier>()
 	

@@ -7,7 +7,7 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"declaration": true,
-		"outFile": "build/distribution/index.js",
+		"outFile": "build/distribution/capjack-tool-cpd.js",
 		"rootDir": "src"
 	},
 	"include": ["src", "node_modules", "types"]

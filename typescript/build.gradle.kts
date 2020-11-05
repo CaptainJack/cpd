@@ -23,7 +23,7 @@ task("generatePackageJson") {
 		p.remove("devDependencies")
 		
 		p["version"] = version.toString()
-		p["main"] = "index.js"
+		p["main"] = "capjack-tool-cpd.js"
 		
 		outputFile.writeText(
 			groovy.json.JsonBuilder(p).toPrettyString()

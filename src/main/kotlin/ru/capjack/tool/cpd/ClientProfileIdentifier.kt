@@ -1,5 +1,6 @@
 package ru.capjack.tool.cpd
 
-interface ClientProfileIdentifier {
+fun interface ClientProfileIdentifier {
 	fun identify(query: String): String
 }
+
