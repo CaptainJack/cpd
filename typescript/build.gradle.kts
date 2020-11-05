@@ -14,6 +14,7 @@ task("generatePackageJson") {
 	val outputFile = distributionDir.resolve("package.json")
 	
 	inputs.file(inputFile)
+	inputs.property("version", version.toString())
 	outputs.file(outputFile)
 	
 	doLast {
