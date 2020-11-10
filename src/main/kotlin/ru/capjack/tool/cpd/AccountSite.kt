@@ -1,6 +1,6 @@
 package ru.capjack.tool.cpd
 
-enum class ClientProfileSite {
+enum class AccountSite {
 	NO,
 	
 	OK,

@@ -1,11 +1,11 @@
 package ru.capjack.tool.cpd.sites
 
 import org.apache.commons.codec.digest.DigestUtils
-import ru.capjack.tool.cpd.ClientProfileIdentifier
+import ru.capjack.tool.cpd.AccountIdentifier
 
-class MmClientProfileIdentifier(
+class MmAccountIdentifier(
 	private val secretKey: String
-) : ClientProfileIdentifier {
+) : AccountIdentifier {
 	
 	override fun identify(query: String): String {
 		val (sig, vid, params) = query.split('-', limit = 3)

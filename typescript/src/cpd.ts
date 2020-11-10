@@ -1,5 +1,5 @@
 module capjack.tool.cpd {
-	export enum ProfileSite {
+	export enum AccountSite {
 		NO,
 		OK,
 		VK,
@@ -10,8 +10,8 @@ module capjack.tool.cpd {
 	
 	export interface CpdState {
 		readonly key: string
-		readonly profileSite: ProfileSite
-		readonly profileSiteApi: any
+		readonly site: AccountSite
+		readonly siteApi: any
 	}
 	
 	export class Config {
@@ -33,17 +33,17 @@ module capjack.tool.cpd {
 			
 			if (sys.isBrowser) {
 				const query = extractQueryParameters(location.search);
-				identity.profileSite = defineBrowserProfileSite(location.host, query);
+				identity.site = defineBrowserSite(location.host, query);
 				
-				if (identity.profileSite == ProfileSite.NO) {
-					identity.profileId = getGeneratedProfileId(project, sys);
+				if (identity.site == AccountSite.NO) {
+					identity.id = getGeneratedId(project, sys);
 					resolve(identity.toState())
 				}
 				else {
-					includeScript(getProfileSiteScriptUrl(identity.profileSite))
+					includeScript(getSiteScriptUrl(identity.site))
 						.catch(reject)
 						.then(() => {
-							initProfileSiteApi(identity, query, c)
+							initSiteApi(identity, query, c)
 								.catch(reject)
 								.then(() => {
 									resolve(identity.toState())
@@ -52,45 +52,45 @@ module capjack.tool.cpd {
 				}
 			}
 			else {
-				identity.profileSite = ProfileSite.NO;
-				identity.profileId = getGeneratedProfileId(project, sys);
+				identity.site = AccountSite.NO;
+				identity.id = getGeneratedId(project, sys);
 				
 				resolve(identity.toState())
 			}
 		});
 	}
 	
-	function getProfileSiteScriptUrl(ps: ProfileSite) {
+	function getSiteScriptUrl(ps: AccountSite) {
 		switch (ps) {
-			case ProfileSite.OK:
+			case AccountSite.OK:
 				return "//api.ok.ru/js/fapi5.js";
-			case ProfileSite.VK:
+			case AccountSite.VK:
 				return "//vk.com/js/api/xd_connection.js?2";
-			case ProfileSite.MM:
+			case AccountSite.MM:
 				return "//connect.mail.ru/js/loader.js";
-			case ProfileSite.YA:
+			case AccountSite.YA:
 				return "//yandex.ru/games/sdk/v2";
-			case ProfileSite.FB:
+			case AccountSite.FB:
 				throw Error("TODO");
 			default:
 				throw Error(`Unsupported profile site '${ps}'`)
 		}
 	}
 	
-	function initProfileSiteApi(identity: Identity, query: Query, config: Config): Promise<void> {
-		switch (identity.profileSite) {
-			case ProfileSite.OK:
+	function initSiteApi(identity: Identity, query: Query, config: Config): Promise<void> {
+		switch (identity.site) {
+			case AccountSite.OK:
 				return initOk(identity, query);
-			case ProfileSite.VK:
+			case AccountSite.VK:
 				return initVk(identity, query, config);
-			case ProfileSite.MM:
+			case AccountSite.MM:
 				return initMm(identity, query, config);
-			case ProfileSite.YA:
+			case AccountSite.YA:
 				return initYa();
-			case ProfileSite.FB:
+			case AccountSite.FB:
 				return initFb();
 			default:
-				throw Error(`Unsupported profile site '${identity.profileSite}'`)
+				throw Error(`Unsupported profile site '${identity.site}'`)
 		}
 	}
 	
@@ -98,8 +98,8 @@ module capjack.tool.cpd {
 		return new Promise((resolve, reject) => {
 			FAPI.init(query.api_server, query.apiconnection,
 				() => {
-					identity.profileId = `${query.auth_sig}-${query.logged_user_id}-${query.session_key}`;
-					identity.profileSiteApi = FAPI;
+					identity.id = `${query.auth_sig}-${query.logged_user_id}-${query.session_key}`;
+					identity.siteApi = FAPI;
 					resolve();
 				},
 				reject
@@ -111,8 +111,8 @@ module capjack.tool.cpd {
 		return new Promise((resolve, reject) => {
 			VK.init(
 				() => {
-					identity.profileId = `${query.auth_key}-${query.api_id}-${query.viewer_id}`;
-					identity.profileSiteApi = VK;
+					identity.id = `${query.auth_key}-${query.api_id}-${query.viewer_id}`;
+					identity.siteApi = VK;
 					resolve();
 				},
 				() => {
@@ -141,8 +141,8 @@ module capjack.tool.cpd {
 					for (const key of keys) {
 						p += key + '=' + query[key];
 					}
-					identity.profileId = p;
-					identity.profileSiteApi = mailru;
+					identity.id = p;
+					identity.siteApi = mailru;
 					resolve()
 				}
 			});
@@ -169,8 +169,8 @@ module capjack.tool.cpd {
 		})
 	}
 	
-	function getGeneratedProfileId(project: string, sys: typeof cc.sys) {
-		const k = `cjt-cpd-${project}-profileId`;
+	function getGeneratedId(project: string, sys: typeof cc.sys) {
+		const k = `cjt-cpd-${project}`;
 		let profileId = sys.localStorage[k];
 		if (profileId == undefined) {
 			const s = [];
@@ -185,13 +185,13 @@ module capjack.tool.cpd {
 		return profileId;
 	}
 	
-	function defineBrowserProfileSite(host: string, query: Query): ProfileSite {
-		if (query.logged_user_id) return ProfileSite.OK;
-		if (query.viewer_id) return ProfileSite.VK;
-		if (query.vid) return ProfileSite.MM;
-		if (host.indexOf("yandex.ru") >= 0) return ProfileSite.YA;
+	function defineBrowserSite(host: string, query: Query): AccountSite {
+		if (query.logged_user_id) return AccountSite.OK;
+		if (query.viewer_id) return AccountSite.VK;
+		if (query.vid) return AccountSite.MM;
+		if (host.indexOf("yandex.ru") >= 0) return AccountSite.YA;
 		
-		return ProfileSite.NO
+		return AccountSite.NO
 	}
 	
 	function extractQueryParameters(query: string): Query {
@@ -208,39 +208,39 @@ module capjack.tool.cpd {
 	}
 	
 	class Identity {
-		public profileSiteApi: any = null;
-		public profileSite: ProfileSite = ProfileSite.NO;
-		public profileId: string = "undefined";
+		public siteApi: any = null;
+		public site: AccountSite = AccountSite.NO;
+		public id: string = "undefined";
 		
 		toState(): CpdState {
 			const k = [
-				this.getProfileSiteKey(),
-				this.profileId
+				this.getSiteKey(),
+				this.id
 			];
 			
 			return {
 				key: k.join(''),
-				profileSite: this.profileSite,
-				profileSiteApi: this.profileSiteApi
+				site: this.site,
+				siteApi: this.siteApi
 			};
 		}
 		
-		private getProfileSiteKey() {
-			switch (this.profileSite) {
-				case ProfileSite.NO:
+		private getSiteKey() {
+			switch (this.site) {
+				case AccountSite.NO:
 					return "no";
-				case ProfileSite.OK:
+				case AccountSite.OK:
 					return "ok";
-				case ProfileSite.VK:
+				case AccountSite.VK:
 					return "vk";
-				case ProfileSite.MM:
+				case AccountSite.MM:
 					return "mm";
-				case ProfileSite.FB:
+				case AccountSite.FB:
 					return "fb";
-				case ProfileSite.YA:
+				case AccountSite.YA:
 					return "ya";
 				default:
-					throw new Event(`Undefined site '${this.profileSite}'`);
+					throw new Event(`Undefined site '${this.site}'`);
 			}
 		}
 	}

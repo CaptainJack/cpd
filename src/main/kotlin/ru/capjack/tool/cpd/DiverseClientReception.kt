@@ -2,35 +2,35 @@ package ru.capjack.tool.cpd
 
 open class DiverseClientReception() : ClientReception {
 	
-	private val profileIdentifiers = mutableMapOf<ClientProfileSite, ClientProfileIdentifier>()
+	private val accountIdentifiers = mutableMapOf<AccountSite, AccountIdentifier>()
 	
-	fun bindProfileIdentifier(site: ClientProfileSite, identifier: ClientProfileIdentifier) {
-		profileIdentifiers[site] = identifier
+	fun bindAccountIdentifier(site: AccountSite, identifier: AccountIdentifier) {
+		accountIdentifiers[site] = identifier
 	}
 	
 	override fun identify(key: String): ClientIdentity {
 		try {
 			require(key.length >= 3)
 			
-			val keyProfileSite = key.substring(0, 2)
-			val keyProfileId = key.substring(2)
+			val keyAccountSite = key.substring(0, 2)
+			val keyAccountId = key.substring(2)
 			
-			val profileSite = when (keyProfileSite) {
-				"no" -> ClientProfileSite.NO
-				"ok" -> ClientProfileSite.OK
-				"vk" -> ClientProfileSite.VK
-				"mm" -> ClientProfileSite.MM
-				"fb" -> ClientProfileSite.FB
-				"ya" -> ClientProfileSite.YA
-				else -> throw IllegalArgumentException("Indefinable device stage '$keyProfileSite'")
+			val accountSite = when (keyAccountSite) {
+				"no" -> AccountSite.NO
+				"ok" -> AccountSite.OK
+				"vk" -> AccountSite.VK
+				"mm" -> AccountSite.MM
+				"fb" -> AccountSite.FB
+				"ya" -> AccountSite.YA
+				else -> throw IllegalArgumentException("Indefinable device stage '$keyAccountSite'")
 			}
 			
-			val identifier = profileIdentifiers[profileSite]
-				?: throw IllegalStateException("Unsupported profile site '$profileSite'")
+			val identifier = accountIdentifiers[accountSite]
+				?: throw IllegalStateException("Unsupported profile site '$accountSite'")
 			
-			val profileId: String = identifier.identify(keyProfileId)
+			val accountId: String = identifier.identify(keyAccountId)
 			
-			return ClientIdentity(profileSite, profileId)
+			return ClientIdentity(accountSite, accountId)
 		}
 		catch (e: Throwable) {
 			throw IllegalArgumentException("Invalid key '$key'", e)

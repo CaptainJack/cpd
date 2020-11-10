@@ -1,6 +1,6 @@
 package ru.capjack.tool.cpd
 
 class ClientIdentity(
-	val profileSite: ClientProfileSite,
-	val profileId: String
+	val accountSite: AccountSite,
+	val accountId: String
 )
