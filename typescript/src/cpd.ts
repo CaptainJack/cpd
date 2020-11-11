@@ -159,7 +159,7 @@ module capjack.tool.cpd {
 	
 	function includeScript(url: string): Promise<void> {
 		return new Promise((resolve, reject) => {
-			const h = document.getElementsByName("head")[0];
+			const h = document.head;
 			const s = document.createElement("script");
 			s.src = url;
 			s.async = true;
